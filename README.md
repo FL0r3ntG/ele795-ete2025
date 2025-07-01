@@ -1,79 +1,178 @@
+# Gant haptique VR – Projet de fin d'études ÉTS
+
 ![LucidGloves](https://cdn.discordapp.com/attachments/785135646082990120/873666310855360582/LucidGlovesBlackwbkgnd.png)
 
-# LucidGloves - Firmware and 3D Printer Files
-This repo contains the arduino firmware as well as the STL files for Prototypes 3 through 4 of the LucidVR glove. This is a finger tracking glove that allows you to use your hands in VR. Follow along with Lucas_VRTech's developments on his Tiktok page:
-https://www.tiktok.com/@lucas_vrtech
+Ce projet est une amélioration du micrologiciel open-source des **LucidGloves**, réalisé dans le cadre d'un **projet de fin d'études (PFE)** à l'**École de technologie supérieure (ÉTS)**, à Montréal.
 
-# Building your own gloves
-**Start here at the wiki! https://github.com/LucidVR/lucidgloves/wiki**
+---
 
-# Support
-Join the LucidVR discord server for assistance:
-https://discord.gg/lucidvr
+## 🎓 Contexte académique
 
+Ce projet est effectué dans le cadre du cours **ELE795 – Projet de fin d'études** en génie. Il est encadré par deux professeurs de l'ÉTS et réalisé en collaboration avec le club étudiant **Conjure**, spécialisé en réalité virtuelle et médias interactifs.
 
-# Firmware
-Open the firmware files located in the firmware/lucidgloves-firmware folder.
-By default the firmware is configured for an arduino nano using serial.
-To configure the firmware, change the defines in the lucidgloves-firmware.ino file.
+**Nom de l'équipe** : Gantastique  
+**Date du projet** : Été 2025  
+**Club client** : Conjure (ÉTS)  
+**Projet client** : Carnaval VR
 
-**Configuration instructions are here: [Configuration Instructions](https://github.com/LucidVR/lucidgloves/wiki/Firmware-Setup-and-Customization-Tutorial).**\
-**Firmware Troubleshooting Guide is here: [Firmware Troubleshooting Guide](https://github.com/LucidVR/lucidgloves/wiki/Firmware-Troubleshooting-Guide).** 
+### Membres de l'équipe Gantastique
 
-## Tested boards:
-* Arduino Nano
-* ESP-WROOM-32
+- **Myiah Catwell** – Génie électrique  
+- **Florent Gilbert** – Génie électrique  
+- **Julie Maurice** – Génie électrique  
+- **Camylle Lupien** – Génie logiciel
 
-## Supported Communication Methods:
-* USB Serial
-* Bluetooth Serial (On ESP32 boards)
-* BLE (Soon, not up yet)
+### Superviseurs
 
-# Hardware
-STL files for 3D printing are located in the hardware folder. 
-*Prototype 4 models are currently experimental.*
+- Claude Thibeault  
+- David Labbé
 
-The assembly **for each hand** is as follows:
+---
 
-For Prototypes 3 and 3.1 - 
-* Spool (5x)
-* Tensioner (5x)
-* Cover (5x)
-* Holder (5x)
-* GuideRing(Will need to be resized) OR GuideNode(3.1) (2+ per finger, 1+ for thumb)
-* EndCap (1x per finger, will need to be resized to fit) 
+## 🧤 Objectif du projet
 
-For Prototypes 4 and 4.1 - 
-* HapticSpool (5x)
-* Tensioner_GreenPot (5x) OR Tensioner_WLPot (5x)
-* SpoolCover (5x)
-* RigidMount (1x) (Left or right hand)
-* WLPotSlideHolder OR WLPotElasticHolder OR GreenPotSlideHolder (5x)
-* Quest2_MountSlider OR Vive3.0_MountSlider (1x)
-* GuideRing (Proto 3) (Will need to be resized) OR GuideNode (Proto 3.1) (2+ per finger, 1+ for thumb)
-* EndCap (Proto 3) (1x per finger, will need to be resized to fit)
+Développer un **gant haptique immersif** destiné à des démonstrations éducatives de réalité virtuelle. Ce gant doit :
 
+- Fournir des **retours sensoriels réalistes** (force, vibration, chaleur),
+- Être **compact**, **sans fil** et **facile à enfiler**,
+- S'intégrer facilement à un environnement **Unity** (Carnaval VR),
+- Reposer sur une architecture **modulaire** avec un circuit imprimé (PCB),
+- Respecter un **budget étudiant** limité à 500 $.
 
+---
 
-Guide for printing parts: [Printing guide](https://github.com/LucidVR/lucidgloves/wiki/Parts-Printing-Guides)
+## ⚙️ Description technique
 
+Le système est basé sur les LucidGloves avec plusieurs améliorations matérielles et logicielles :
 
-**Required parts for each hand: [Parts Lists](https://github.com/LucidVR/lucidgloves/wiki/Parts-Lists)**  
-Optional:  
-* Joysticks for locomotion 
-  - Will be making a DIY treadmill eventually as well for those who would prefer that  
-* Buttons (Most can be replaced with gestures) (One is required for autocalibration)
+### Architecture électronique
 
-More information will be available on the [LucidVR site](http://lucidvrtech.com/) very soon.  
-*  [Prototype 3/3.1 Building Tutorial](https://youtu.be/Qj4hqRKiy8g)
-*  [Prototype 4/4.1 Building Tutorial](https://youtu.be/2yF-SJcg3zQ)
+- **Microcontrôleur** : ESP32 (Bluetooth/Wi-Fi intégré)
+- **Capteurs** : Potentiomètres flexibles pour capter la position des doigts
+- **Actionneurs** :
+  - Servomoteurs pour le retour de force (index, pouce)
+  - Modules Peltier pour les variations de température
+  - Vibreurs tactiles pour retours haptiques rapides
+- **Circuit imprimé (PCB)** : compact, adapté à la forme du gant
+- **Alimentation** : Batterie LiPo, autonomie d'environ 1 heure
+- **Suivi de main** : Solution alternative aux manettes Vive/Quest 2 (ex. capteurs inertiels)
 
-# SteamVR Compatibility (OpenGloves)
-This project uses the OpenGloves OpenVR driver for compatibility with SteamVR, which is downloadable on Steam:  
-https://store.steampowered.com/app/1574050/OpenGloves/
+### Plateformes logicielles
 
-Source code available on GitHub:  
-https://github.com/LucidVR/opengloves-driver
+- **Firmware** : Adaptation du micrologiciel LucidGloves pour ESP32
+- **IDE** : Visual Studio Code avec PlatformIO
+- **Environnement VR** : Unity 3D
+- **Intégration VR** : SteamVR / OpenVR via OpenGloves
+- **Communication** : Sérialisation de données via Bluetooth/Wi-Fi
 
-# Other Languages
-**[English](https://github.com/LucidVR/lucidgloves/blob/main/README.md) | [简体中文](https://github.com/LucidVR/lucidgloves/blob/main/Readme_Languages/README_CN.md)**
+---
+
+## ✅ Objectifs techniques
+
+1. **Retour de force** : Doigts contraints mécaniquement avec des servos synchronisés aux événements VR.
+2. **Retour thermique** : Modules chauffants pour simuler des variations de température (25°C à 35°C).
+3. **Vibration tactile** : Vibreurs au niveau du pouce et de l'index.
+4. **Architecture compacte** : Intégration d'un PCB dans le gant avec gestion des câbles.
+5. **Ergonomie** : Enfilage < 10 secondes, gant léger et confortable.
+6. **Compatibilité logicielle** : Intégration facile avec Unity + documentation API.
+7. **Sans fil** : Transmission Bluetooth (ou Wi-Fi) stable.
+8. **Budget optimisé** : Conception sous les 500 $.
+
+---
+
+## 🔧 Configuration et installation
+
+### Micrologiciel
+
+Le micrologiciel est basé sur LucidGloves et optimisé pour ESP32. Notre version personnalisée est située dans le répertoire `/firmware` du projet.
+
+**Configuration par défaut :**
+- Microcontrôleur : ESP32
+- Communication : Bluetooth Serial
+- Support des retours haptiques avancés
+
+### Méthodes de communication supportées
+- Bluetooth Serial (ESP32)
+- Wi-Fi (ESP32)
+- USB Serial (mode debug)
+
+### Instructions de configuration
+
+1. Ouvrir les fichiers firmware dans le dossier `firmware/lucidgloves-firmware`
+2. Configurer les paramètres dans le fichier `lucidgloves-firmware.ino`
+3. Modifier les définitions (`#define`) selon votre configuration matérielle
+
+**Guide de configuration détaillé :** [Configuration Instructions](https://github.com/LucidVR/lucidgloves/wiki/Firmware-Setup-and-Customization-Tutorial)
+
+---
+
+## 🖨️ Matériel et impression 3D
+
+### Pièces imprimées 3D requises (par main)
+
+**Guide d'impression :** [Printing guide](https://github.com/LucidVR/lucidgloves/wiki/Parts-Printing-Guides)
+**Liste complète des composants :** [Parts Lists](https://github.com/LucidVR/lucidgloves/wiki/Parts-Lists)
+
+### Composants électroniques additionnels
+
+**Composants optionnels pour ce projet :**
+- Joysticks pour la locomotion
+- Boutons (la plupart peuvent être remplacés par des gestes)
+- Modules Peltier pour retour thermique
+- Vibreurs tactiles
+- Circuit imprimé personnalisé
+
+---
+
+## 🎮 Compatibilité SteamVR (OpenGloves)
+
+Ce projet utilise le driver OpenGloves OpenVR pour la compatibilité avec SteamVR :
+
+**Téléchargement :** https://store.steampowered.com/app/1574050/OpenGloves/
+**Code source :** https://github.com/LucidVR/opengloves-driver
+
+---
+
+## 🧪 Tests et validation
+
+- Tests unitaires sur le micrologiciel, la communication et la détection de gestes
+- Tests de retour de force (oscilloscope, échelle de Likert utilisateur)
+- Tests thermiques (capteurs de température)
+- Tests d'intégration VR avec Unity (Carnaval VR)
+- Évaluation utilisateur en situation immersive
+
+---
+
+## 📚 Ressources et documentation
+
+### Documentation LucidGloves
+- **Wiki officiel :** https://github.com/LucidVR/lucidgloves/wiki
+- **Guide de configuration :** [Firmware Setup and Customization Tutorial](https://github.com/LucidVR/lucidgloves/wiki/Firmware-Setup-and-Customization-Tutorial)
+- **Dépannage :** [Firmware Troubleshooting Guide](https://github.com/LucidVR/lucidgloves/wiki/Firmware-Troubleshooting-Guide)
+
+### Support communautaire
+- **Discord LucidVR :** https://discord.gg/lucidvr
+- **TikTok Lucas_VRTech :** https://www.tiktok.com/@lucas_vrtech
+- **Site web :** http://lucidvrtech.com/
+
+---
+
+## 📄 Licence et crédits
+
+Ce projet repose sur le travail de la communauté open-source **LucidVR**.  
+Nous remercions la communauté pour la base logicielle disponible publiquement.
+
+**Crédits spéciaux :**
+- Communauté LucidVR pour le firmware et les modèles 3D de base
+- Lucas_VRTech pour le développement original des LucidGloves
+
+**Projet réalisé par des étudiants de l'ÉTS à des fins académiques.**  
+Aucune visée commerciale.
+
+---
+
+## 📬 Contact
+
+Pour plus d'informations, vous pouvez contacter l'équipe Gantastique via le club **Conjure ÉTS**.
+
+---
