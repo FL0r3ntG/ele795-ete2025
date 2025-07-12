@@ -64,27 +64,36 @@
 #if defined(ESP32)
   //(This configuration is for ESP32 DOIT V1 so make sure to change if you're on another board)
   //To use a pin on the multiplexer, use MUX(pin). So for example pin 15 on a mux would be MUX(15).
+
+  #define PINS_MUX_SELECT     33,  /*S0 pin*/ \
+                              25,  /*S1 pin*/ \
+                              26,  /*S2 pin*/ \
+                              27   /*S3 pin (if your mux is 3-bit like 74HC4051 then you can remove this line and the backslash before it.)*/
+  
+  #define PIN_PINKY_VIBR    4
+  #define PIN_RING_VIBR     2
+  #define PIN_MIDDLE_VIBR   15
+  #define PIN_INDEX_VIBR    12
+  #define PIN_THUMB_VIBR    14
+
+  #define PIN_PINKY_MOTOR   19
+  #define PIN_RING_MOTOR    28
+  #define PIN_MIDDLE_MOTOR  5
+  #define PIN_INDEX_MOTOR   17
+  #define PIN_THUMB_MOTOR   16
+
+  #define PIN_TEMP_CTRL     23
+  #define PIN_TEMP_MES      13
+  #define PIN_CALIB         21 //button for recalibration (You can set this to GPIO0 to use the BOOT button, but only when using Bluetooth.)
+  #define DEBUG_LED         22
+
+
   #define PIN_PINKY     MUX(12) //These 5 are for flexion
   #define PIN_RING      MUX(9)
   #define PIN_MIDDLE    MUX(6)
   #define PIN_INDEX     MUX(3)
   #define PIN_THUMB     MUX(0)
-  #define PIN_JOY_X     33
-  #define PIN_JOY_Y     25
-  #define PIN_JOY_BTN   26
-  #define PIN_A_BTN     27 
-  #define PIN_B_BTN     14
-  #define PIN_TRIG_BTN  12 //unused if gesture set
-  #define PIN_GRAB_BTN  13 //unused if gesture set
-  #define PIN_PNCH_BTN  23 //unused if gesture set
-  #define PIN_CALIB     32 //button for recalibration (You can set this to GPIO0 to use the BOOT button, but only when using Bluetooth.)
-  #define DEBUG_LED 2
-  #define PIN_PINKY_MOTOR     19  //used for force feedback
-  #define PIN_RING_MOTOR      18 //^
-  #define PIN_MIDDLE_MOTOR    5 //^
-  #define PIN_INDEX_MOTOR     17 //^
-  #define PIN_THUMB_MOTOR     16 //^
-  #define PIN_MENU_BTN        34
+
 
   //Splay pins. Only used for splay tracking gloves. Use MUX(pin) if you are using a multiplexer for it.
   #define PIN_PINKY_SPLAY  MUX(14)
@@ -92,15 +101,10 @@
   #define PIN_MIDDLE_SPLAY MUX(8)
   #define PIN_INDEX_SPLAY  MUX(5)
   #define PIN_THUMB_SPLAY  MUX(2)
-  
 
   //Select pins for multiplexers, set as needed if using a mux. You can add or remove pins as needed depending on how many select pins your mux needs.
-  #define PINS_MUX_SELECT     27,  /*S0 pin*/ \
-                              14,  /*S1 pin*/ \
-                              12,  /*S2 pin*/ \
-                              13   /*S3 pin (if your mux is 3-bit like 74HC4051 then you can remove this line and the backslash before it.)*/
-  
-  #define MUX_INPUT 35  //the input or SIG pin of the multiplexer. This can't be a mux pin.
+
+  #define MUX_INPUT   35  //the input or SIG pin of the multiplexer. This can't be a mux pin.
 
   //Signal mixing for finger values. Options are: MIXING_NONE, MIXING_SINCOS
   //For double rotary hall effect sensors use MIXING_SINCOS. For potentiometers use MIXING_NONE.
