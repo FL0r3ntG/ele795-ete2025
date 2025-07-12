@@ -65,35 +65,33 @@
   //(This configuration is for ESP32 DOIT V1 so make sure to change if you're on another board)
   //To use a pin on the multiplexer, use MUX(pin). So for example pin 15 on a mux would be MUX(15).
 
-  #define PINS_MUX_SELECT     33,  /*S0 pin*/ \
-                              25,  /*S1 pin*/ \
-                              26,  /*S2 pin*/ \
-                              27   /*S3 pin (if your mux is 3-bit like 74HC4051 then you can remove this line and the backslash before it.)*/
-  
-  #define PIN_PINKY_VIBR    4
+  #define PIN_PINKY_VIBR    4 //These 5 are for vibration motors
   #define PIN_RING_VIBR     2
   #define PIN_MIDDLE_VIBR   15
   #define PIN_INDEX_VIBR    12
   #define PIN_THUMB_VIBR    14
 
-  #define PIN_PINKY_MOTOR   19
+  #define PIN_PINKY_MOTOR   19 //These 5 are for servo motors
   #define PIN_RING_MOTOR    28
   #define PIN_MIDDLE_MOTOR  5
   #define PIN_INDEX_MOTOR   17
   #define PIN_THUMB_MOTOR   16
 
-  #define PIN_TEMP_CTRL     23
-  #define PIN_TEMP_MES      13
+  #define PIN_TEMP_CTRL     23 //This is to control the heat pad
+  #define PIN_TEMP_MES      13 //To read the temp of the heat pad
   #define PIN_CALIB         21 //button for recalibration (You can set this to GPIO0 to use the BOOT button, but only when using Bluetooth.)
   #define DEBUG_LED         22
 
+  #define PINS_MUX_SELECT     33,  /*S0 pin*/ \
+                              25,  /*S1 pin*/ \
+                              26,  /*S2 pin*/ \
+                              27   /*S3 pin (if your mux is 3-bit like 74HC4051 then you can remove this line and the backslash before it.)*/
 
   #define PIN_PINKY     MUX(12) //These 5 are for flexion
   #define PIN_RING      MUX(9)
   #define PIN_MIDDLE    MUX(6)
   #define PIN_INDEX     MUX(3)
   #define PIN_THUMB     MUX(0)
-
 
   //Splay pins. Only used for splay tracking gloves. Use MUX(pin) if you are using a multiplexer for it.
   #define PIN_PINKY_SPLAY  MUX(14)
