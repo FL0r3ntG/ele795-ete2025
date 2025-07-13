@@ -61,6 +61,12 @@
 #define FLIP_FORCE_FEEDBACK true
 #define SERVO_SCALING false //dynamic scaling of servo motors
 
+////// NEW
+
+#define USING_THERMAL true
+
+#define USING_VIBRATION true
+
 #if defined(ESP32)
   //(This configuration is for ESP32 DOIT V1 so make sure to change if you're on another board)
   //To use a pin on the multiplexer, use MUX(pin). So for example pin 15 on a mux would be MUX(15).

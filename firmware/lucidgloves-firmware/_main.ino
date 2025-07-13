@@ -9,6 +9,9 @@
 bool calibrate = false;
 bool calibButton = false;
 int* fingerPos = (int[]){0,0,0,0,0,0,0,0,0,0};
+// new 
+ThermalData thermal = {0, 30.0, 0, false};
+VibrationData vibration = {0, 0, 0, 0, 0, false};
 
 ICommunication* comm;
 
@@ -67,6 +70,15 @@ void setup() {
   #if USING_FORCE_FEEDBACK
     setupServoHaptics();  
   #endif
+
+  #if USING_THERMAL
+    setupThermal();  
+  #endif
+
+  #if USING_VIBRATION
+    setupVibration();  
+  #endif
+
   
   #if ESP32_DUAL_CORE_SET
     xTaskCreatePinnedToCore(
@@ -184,6 +196,16 @@ void loop() {
         }
       }
     #endif
+
+    #if USING_THERMAL
+      updateThermal();
+    #endif
+
+    #if USING_VIBRATION
+      updateVibration(); 
+    #endif
+
+
     delay(LOOP_TIME);
   }
 }
