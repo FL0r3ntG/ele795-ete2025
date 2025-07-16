@@ -119,6 +119,13 @@
     #define PIN_MIDDLE_SECOND    MUX(7)
     #define PIN_INDEX_SECOND     MUX(4)
     #define PIN_THUMB_SECOND     MUX(1)
+
+  // unused
+  #define PIN_JOY_BTN 1
+  #define PIN_A_BTN 1
+  #define PIN_B_BTN 1
+  #define PIN_MENU_BTN 1
+
   
 //PINS CONFIGURATION 
 #elif defined(__AVR__)

@@ -1,99 +1,82 @@
 /*
  * LucidGloves Firmware Version 4
- * Author: Florent 
-*/
-
-// Data Structures
-struct ThermalData {
-  float currentTemp = 0;
-  float targetTemp = 30.0;
-  uint8_t pwmValue = 0;
-  bool heatingActive = false;
-};
-
-struct VibrationData {
-  uint8_t pinkyIntensity = 0;
-  uint8_t ringIntensity = 0;
-  uint8_t middleIntensity = 0;
-  uint8_t indexIntensity = 0;
-  uint8_t thumbIntensity = 0;
-  bool motorsActive = false;
-};
-
-extern ThermalData thermal;
-extern VibrationData vibration;
-
-///////////////// THERMAL HEATPAD //////////////////////////////
-//https://learn.sparkfun.com/tutorials/heating-pad-hand-warmer-blanket
-//https://astronomersanonymous.wordpress.com/2016/04/02/controlling-heating-pads-with-arduino-uno/
-
-
-// 0%   ->   0   -> 23°C
-// 25%  ->  64   -> 33°C
-// 50%  -> 128   -> 43°C
-// 75%  -> 191   -> 53°C
-// 100% -> 255   -> 63°C
-
+ * Author: Florent
+ *
+ * THERMAL HEATPAD CONTROL
+ * ------------------------
+ * Reference:
+ * - https://learn.sparkfun.com/tutorials/heating-pad-hand-warmer-blanket
+ * - https://astronomersanonymous.wordpress.com/2016/04/02/controlling-heating-pads-with-arduino-uno/
+ *
+ * PWM vs Temp:
+ *   0%   ->   0   -> 23°C
+ *   25%  ->  64   -> 33°C
+ *   50%  -> 128   -> 43°C
+ *   75%  -> 191   -> 53°C
+ *   100% -> 255   -> 63°C
+ */
 
 #include <math.h>
 
+// -------------------------------
+// THERMAL MODULE
+// -------------------------------
 
-void setupThermal(){
-
+void setupThermal() {
   Serial.begin(115200);
 
   pinMode(PIN_TEMP_CTRL, INPUT);
-  analogWrite(PIN_TEMP_CTRL, 0);
-
   pinMode(PIN_TEMP_MES, OUTPUT);
-  
+
+  analogWrite(PIN_TEMP_CTRL, 0);  // Safe default
 }
 
-void WriteThermal() {
-
+void writeThermal(int targetTemp) {
   int adcValue = analogRead(PIN_TEMP_CTRL);
-  double voltage = (float)adcValue/4095.0*3.3;
-  double Rt = 10*voltage/(3.3-voltage);
-  double tempk = 1/(1/(273.15+25)+log(Rt/10)/3950.0);
-  double T = tempk-273.15;
+  double voltage = (float)adcValue / 4095.0 * 3.3;
+  double resistance = 10.0 * voltage / (3.3 - voltage);  // Thermistor resistance
+  double tempK = 1.0 / (1.0 / (273.15 + 25.0) + log(resistance / 10.0) / 3950.0);
+  double currentTemp = tempK - 273.15;
 
-    //Serial.print("Temperature: "); 
-    //Serial.print(T);
-    //Serial.println(" C"); 
+  int pwmOutput = 0;
 
-  if(T>30){
-    analogWrite(PIN_TEMP_MES, 0); //0% heater off
-    }
-  else if (T<14){
-    analogWrite(PIN_TEMP_MES, 255); //heater on at 100%
-  }
-  else{
-    analogWrite(PIN_TEMP_MES, 0); //0% duty cycle on heater
+  if (currentTemp < targetTemp - 2.0) {
+    pwmOutput = 255;
+  } else if (currentTemp > targetTemp + 2.0) {
+    pwmOutput = 0;
+  } else {
+    double error = targetTemp - currentTemp;
+    pwmOutput = constrain((int)(error * 32), 0, 255);  // Gain may be tuned
   }
 
-}
-
-void ReadThermal(){
-
+  analogWrite(PIN_TEMP_MES, pwmOutput);
 }
 
 
-//////////////////// VIBRATION MOTOR ////////////////////////
+// -------------------------------
+// VIBRATION MODULE
+// -------------------------------
 
 void setupVibration() {
-  const int motorPins[] = {PIN_PINKY_VIBR, PIN_RING_VIBR, PIN_MIDDLE_VIBR, 
-                          PIN_INDEX_VIBR, PIN_THUMB_VIBR};
-  
-  for (int i = 0; i < 5; i++) {
-    pinMode(motorPins[i], OUTPUT);
-    analogWrite(motorPins[i], 0);
-  }
+  pinMode(PIN_PINKY_VIBR, OUTPUT);
+  pinMode(PIN_RING_VIBR, OUTPUT);
+  pinMode(PIN_MIDDLE_VIBR, OUTPUT);
+  pinMode(PIN_INDEX_VIBR, OUTPUT);
+  pinMode(PIN_THUMB_VIBR, OUTPUT);
+
+  analogWrite(PIN_PINKY_VIBR, 0);
+  analogWrite(PIN_RING_VIBR, 0);
+  analogWrite(PIN_MIDDLE_VIBR, 0);
+  analogWrite(PIN_INDEX_VIBR, 0);
+  analogWrite(PIN_THUMB_VIBR, 0);
 }
 
-void WriteVibration(){
-
-    digitalWrite(motorPin, HIGH); //vibrate
-    digitalWrite(motorPin, LOW);  //stop vibrating
-
+void writeVibration(int *vibrationIntensity) {
+#if defined(ESP32)
+  digitalWrite(PIN_THUMB_MOTOR,  vibrationIntensity[0]);
+  digitalWrite(PIN_INDEX_MOTOR,  vibrationIntensity[1]);
+  digitalWrite(PIN_MIDDLE_MOTOR, vibrationIntensity[2]);
+  digitalWrite(PIN_RING_MOTOR,   vibrationIntensity[3]);
+  digitalWrite(PIN_PINKY_MOTOR,  vibrationIntensity[4]);
+#endif
 }
-

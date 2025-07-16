@@ -63,12 +63,10 @@ char* encode(int* flexion, int joyX, int joyY, bool joyClick, bool triggerButton
 }
 
 //alpha decoding
-void decodeData(char* stringToDecode, int* hapticLimits){
+void decodeData(char* stringToDecode, int* hapticLimits, int* vibrationIntensity, int* temperature){
 
-  //Check if a Z command was received
-  //Serial.println("Message recieved");
+  // Check for command-based messages
   if (strchr(stringToDecode, 'Z') != NULL) {
-    //Serial.println("Found Z!");
     bool toReturn = false;
     if (strstr(stringToDecode, "ClearData") != NULL) {
         clearFlags();
@@ -87,12 +85,24 @@ void decodeData(char* stringToDecode, int* hapticLimits){
       return;
   }
 
-  hapticLimits[0] = getArgument(stringToDecode, 'A'); //thumb
-  hapticLimits[1] = getArgument(stringToDecode, 'B'); //index
-  hapticLimits[2] = getArgument(stringToDecode, 'C'); //middle
-  hapticLimits[3] = getArgument(stringToDecode, 'D'); //ring
-  hapticLimits[4] = getArgument(stringToDecode, 'E'); //pinky
+  // Parse haptic limits (A-E)
+  hapticLimits[0] = getArgument(stringToDecode, 'A'); // thumb
+  hapticLimits[1] = getArgument(stringToDecode, 'B'); // index
+  hapticLimits[2] = getArgument(stringToDecode, 'C'); // middle
+  hapticLimits[3] = getArgument(stringToDecode, 'D'); // ring
+  hapticLimits[4] = getArgument(stringToDecode, 'E'); // pinky
+
+  // Parse vibration intensities (F-J)
+  vibrationIntensity[0] = getArgument(stringToDecode, 'F'); // thumb
+  vibrationIntensity[1] = getArgument(stringToDecode, 'G'); // index
+  vibrationIntensity[2] = getArgument(stringToDecode, 'H'); // middle
+  vibrationIntensity[3] = getArgument(stringToDecode, 'I'); // ring
+  vibrationIntensity[4] = getArgument(stringToDecode, 'J'); // pinky
+
+  // Parse temperature (T)
+  *temperature = getArgument(stringToDecode, 'T');
 }
+
 
 int getArgument(char* stringToDecode, char command){
   char* start = strchr(stringToDecode, command);

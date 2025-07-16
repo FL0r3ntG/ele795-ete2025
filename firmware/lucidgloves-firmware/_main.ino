@@ -9,9 +9,6 @@
 bool calibrate = false;
 bool calibButton = false;
 int* fingerPos = (int[]){0,0,0,0,0,0,0,0,0,0};
-// new 
-ThermalData thermal = {0, 30.0, 0, false};
-VibrationData vibration = {0, 0, 0, 0, 0, false};
 
 ICommunication* comm;
 
@@ -183,26 +180,26 @@ void loop() {
       #endif
       
     }
-
+    // Ajouter du decode data la temperature et le vibration des moteurs 
     comm->output(encode(fingerPosCopy, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
+
+    
     #if USING_FORCE_FEEDBACK
-      char received[100];
+      char received[150];
       if (comm->readData(received)){
         int hapticLimits[5];
+        int vibrationIntensity[5];
+        int targetTemp;
+        
         //This check is a temporary hack to fix an issue with haptics on v0.5 of the driver, will make it more snobby code later
-        if(String(received).length() >= 5) {
-           decodeData(received, hapticLimits);
-           writeServoHaptics(hapticLimits); 
+        if(String(received).length() >= (5 + 5 + 1)) {
+           decodeData(received, hapticLimits,vibrationIntensity,&targetTemp);
+
+           writeServoHaptics(hapticLimits);
+           writeVibration(vibrationIntensity);
+           writeThermal(targetTemp);
         }
       }
-    #endif
-
-    #if USING_THERMAL
-      updateThermal();
-    #endif
-
-    #if USING_VIBRATION
-      updateVibration(); 
     #endif
 
 
