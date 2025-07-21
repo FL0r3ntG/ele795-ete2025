@@ -56,4 +56,33 @@ void writeServoHaptics(int* hapticLimits){
   if(hapticLimits[4] >= 0) pinkyServo.write(scaledLimits[4]);
 }
 
+
+// -------------------------------
+// VIBRATION MODULE
+// -------------------------------
+
+void setupVibration() {
+  pinMode(PIN_PINKY_VIBR, OUTPUT);
+  pinMode(PIN_RING_VIBR, OUTPUT);
+  pinMode(PIN_MIDDLE_VIBR, OUTPUT);
+  pinMode(PIN_INDEX_VIBR, OUTPUT);
+  pinMode(PIN_THUMB_VIBR, OUTPUT);
+
+  analogWrite(PIN_PINKY_VIBR, 0);
+  analogWrite(PIN_RING_VIBR, 0);
+  analogWrite(PIN_MIDDLE_VIBR, 0);
+  analogWrite(PIN_INDEX_VIBR, 0);
+  analogWrite(PIN_THUMB_VIBR, 0);
+}
+
+void writeVibration(int *vibrationIntensity) {
+
+  digitalWrite(PIN_THUMB_MOTOR,  vibrationIntensity[0]);
+  digitalWrite(PIN_INDEX_MOTOR,  vibrationIntensity[1]);
+  digitalWrite(PIN_MIDDLE_MOTOR, vibrationIntensity[2]);
+  digitalWrite(PIN_RING_MOTOR,   vibrationIntensity[3]);
+  digitalWrite(PIN_PINKY_MOTOR,  vibrationIntensity[4]);
+
+}
+
 #endif

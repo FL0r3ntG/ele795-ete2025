@@ -6,6 +6,8 @@
   #error "You can't set your calibration pin to 0 over usb. You can calibrate with the BOOT button when using bluetooth only. Set CalibOverride to true to override this."
 #endif
 
+
+
 bool calibrate = false;
 bool calibButton = false;
 int* fingerPos = (int[]){0,0,0,0,0,0,0,0,0,0};
@@ -57,7 +59,8 @@ void setup() {
   setupInputs();
 
   #if USING_FORCE_FEEDBACK
-    setupServoHaptics();  
+    setupServoHaptics(); 
+    setupVibration();
   #endif
   
   #if ESP32_DUAL_CORE_SET
@@ -80,6 +83,16 @@ int mainloops = 1;
 
 int target = 0;
 bool latch = false;
+
+
+
+
+// Pinch history for vibration motor activation
+unsigned long lastPinchTime = 0;              // Keeps track of last time vibration triggered
+const unsigned long cooldown = 500;           // 500 milliseconds = 0.5 second
+
+int vibrationIntensity[5] = {0};
+
 
 void loop() {
   mainloops++;
@@ -163,6 +176,35 @@ void loop() {
       #endif
       
     }
+
+    #if USING_FORCE_FEEDBACK
+    
+    unsigned long now = millis();  
+
+    if (pinchButton && (now - lastPinchTime > cooldown)){
+      
+      vibrationIntensity[0] = 255;
+      vibrationIntensity[1] = 255;
+      vibrationIntensity[2] = 255;
+      vibrationIntensity[3] = 255;
+      vibrationIntensity[4] = 255;
+
+      writeVibration(vibrationIntensity);
+
+      lastPinchTime = now; // Update last vibration time
+
+    } else {
+
+      vibrationIntensity[0] = 0;
+      vibrationIntensity[1] = 0;
+      vibrationIntensity[2] = 0;
+      vibrationIntensity[3] = 0;
+      vibrationIntensity[4] = 0;
+
+      writeVibration(vibrationIntensity);
+
+    }
+    #endif
 
     comm->output(encode(fingerPosCopy, getJoyX(), getJoyY(), joyButton, triggerButton, aButton, bButton, grabButton, pinchButton, calibButton, menuButton));
     #if USING_FORCE_FEEDBACK
